@@ -14,8 +14,8 @@ timezone: Europe/Moscow
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: http://abdulgalimov.com
 root: /
-permalink: :year/:month/:day/:title/
-permalink_defaults:
+permalink: :category/:title/
+permalink_defaults: test
 
 # Directory
 source_dir: source
@@ -34,7 +34,7 @@ titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:
@@ -44,7 +44,7 @@ highlight:
   tab_replace:
 
 # Category & Tag
-default_category: uncategorized
+default_category: post
 category_map:
 tag_map:
 
