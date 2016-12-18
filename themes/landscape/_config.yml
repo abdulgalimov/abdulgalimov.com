@@ -1,7 +1,7 @@
 # Header
 menu:
   Home: /
-  Archives: /archives
+  About: /about/
 rss: /atom.xml
 
 # Content
@@ -25,12 +25,12 @@ index_widgets:
 
 # widget behavior
 archive_type: 'monthly'
-show_count: false
+show_count: true
 
 # Miscellaneous
-google_analytics:
+google_analytics: UA-37711388-2
 favicon: /favicon.png
-twitter:
+twitter: z_abdulgalimov
 google_plus:
 fb_admins:
 fb_app_id:
