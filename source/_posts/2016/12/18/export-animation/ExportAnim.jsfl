@@ -1,4 +1,11 @@
-﻿
+﻿/*
+ Для работы скрипта. должен быть открыт fla документ, в библиотеке которого есть клип с классом animation.
+ Скрипт копирует открытый fla документ в файл _prepare.fla
+ Далее файл _prepare подготовливается для экспорта в Canvas, в частности все векторные элементы преобразуются в bitmap.
+ После чего создается Canvas документ и в него копируется анимация.
+ */
+
+
 fl.outputPanel.clear();
 function trace() {
 	var m = '';
@@ -14,6 +21,12 @@ function getDirPath(filename)
 	arr.splice(-1);
 	return arr.join('/');
 }
+function getName(filename)
+{
+	var arr = filename.split('/');
+	var name = arr[arr.length-1];
+	return name.split('.fla')[0];
+}
 
 
 var sourceDoc = fl.getDocumentDOM();
@@ -21,9 +34,12 @@ var prepareDoc;
 var prepareLib;
 var reg4CyrillicDetect = /[а-яА-Я]/g;
 var fullNameAnim = 'EggAnimation';
+/*
+ Подготовить документ к экспорту в Canvas
+ */
 function prepareFile() {
 	//
-	var preparePath = getDirPath(sourceDoc.pathURI)+'/_prepare.fla';
+	var preparePath = getDirPath(sourceDoc.pathURI)+'/prepare.fla';
 	if (FLfile.exists(preparePath)) FLfile.remove(preparePath);
 	FLfile.copy(sourceDoc.pathURI, preparePath);
 	prepareDoc = fl.openDocument(preparePath);
@@ -59,6 +75,7 @@ function prepareFile() {
 	fl.saveDocument(prepareDoc);
 	//prepareDoc.close(false);
 }
+
 function convertShapesToBitmap(item) {
 	trace('convertShapesToBitmap:', item.name);
 	prepareLib.editItem(item.name);
@@ -109,9 +126,14 @@ function convertToCanvas()
 	var canvasDoc = fl.createDocument('htmlcanvas');
 	canvasDoc.clipPaste();
 	//
-	var canvasPath = getDirPath(sourceDoc.pathURI)+'/_canvas.fla';
+	var canvasPath = getDirPath(sourceDoc.pathURI)+'/canvas.fla';
 	if (FLfile.exists(canvasPath)) FLfile.remove(canvasPath);
 	fl.saveDocument(canvasDoc, canvasPath);
+	canvasDoc.publish();
+	//
+	/*
+	Здесь можно произвести преобразования полученного JS файла
+	 */
 }
 
 if (sourceDoc) {

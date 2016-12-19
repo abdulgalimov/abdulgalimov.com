@@ -111,3 +111,9 @@ canvasDoc.clipPaste();
 ```
 
 Это будет гораздно быстрее, и к тому же в canvas документ не будут скопированы не нужные элементы библиотеки из исходного FLA файла, если например там есть какие то вспомогательные тестовые элементы в библиотеке(аниматоры любят хранить там всякий хлам).
+
+## Ссылки 
+1. {% asset_link original.fla original.fla %} Оригинальный fla документ
+2. {% asset_link ExportAnim.jsfl ExportAnim.jsfl %} JSFL скрипт для конвертирования документа в <strong>HTML5/Canvas</strong> формат
+3. {% asset_link prepare.fla prepare.fla %} Предварительный вариант докумета, в котором вся векторная графика заменена на bitmap
+4. {% asset_link canvas.fla canvas.fla %} Итоговый Canvas документ
