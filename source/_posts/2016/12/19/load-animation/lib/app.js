@@ -8,24 +8,25 @@ shape.graphics.drawRect(0, 0, 170, 240);
 stage.addChild(shape);
 //
 var loaderEgg = document.createElement('script');
-var rootCont = document.getElementsByTagName('head')[0];
-rootCont.appendChild(loaderEgg);
+document.getElementsByTagName('head')[0].appendChild(loaderEgg);
 loaderEgg.src = jsPath;
 loaderEgg.view = this;
+var loaderManifest;
 loaderEgg.onload = function()
 {
-	eggLib = window['lib_egg'];
-	eggLib.properties.manifest[0].src = atlasPath;
-	loaderManifest = new createjs.LoadQueue(false);
-    loaderManifest.addEventListener("complete", onLoadComplete);
+    eggLib = window['lib_egg'];
+    // записываем в манифест путь полный до картинки атласа
+    eggLib.properties.manifest[0].src = atlasPath;
+    loaderManifest = new createjs.LoadQueue(false);
+    loaderManifest.addEventListener("complete", onLoadedManifest);
     loaderManifest.loadManifest(eggLib.properties.manifest);
 }
+//
 var eggLib;
-var loaderManifest;
 var eggObj;
-function onLoadComplete(evt)
+function onLoadedManifest(evt)
 {
-	var queue = evt.target;
+    var queue = evt.target;
     var ssMetadata = eggLib.ssMetadata;
     var ssLoader;
     var item;
@@ -34,15 +35,15 @@ function onLoadComplete(evt)
         var result = queue.getResult(item.name);
         eggLib._images[item.name] = result;
         if (!result) continue;
-        var image = new createjs.SpriteSheet( {"images": [result], "frames": ssMetadata[i].frames} );
-        eggLib._ss[ssMetadata[i].name] = image;
+        eggLib._ss[ssMetadata[i].name] = new createjs.SpriteSheet( {"images": [result], "frames": ssMetadata[i].frames} );
     }
     //
-    eggObj = new eggLib.egg();
-    eggObj.TURN = function()
-	{
-		eggObj.stop();
-	}
+    eggObj = new eggLib.animation();
+    // функция this.TURN() будет вызвана
+    // в конце проигрывания анимации 'die'
+    eggObj.TURN = function() {
+        eggObj.stop();
+    }
     eggObj.x = 185;
     eggObj.y = 130;
     stage.addChild(eggObj);

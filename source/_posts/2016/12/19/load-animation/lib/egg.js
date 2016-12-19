@@ -1575,7 +1575,7 @@ function getMCSymbolPrototype(symbol, nominalBounds, frameBounds) {
 }).prototype = getMCSymbolPrototype(lib._11, new cjs.Rectangle(149,61,52,69), null);
 
 
-(lib.egg = function(mode,startPosition,loop) {
+(lib.animation = function(mode,startPosition,loop) {
 	this.initialize(mode,startPosition,loop,{idle:0,die:77});
 
 	// timeline functions:
