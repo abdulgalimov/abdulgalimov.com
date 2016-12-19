@@ -5,31 +5,7 @@ tags:
 category: convert
 ---
 
-В прошлой статье мы разбирали как экспортировать из флеша простой контент: изображения, анимации в png-sequence, и т.п. Если же у вас есть скелетная анимация, с большим количеством кадров, экспортировать такую анимацию в png-sequence - это не решение проблемы. В этой ситуации мы можем конвертировать анимацию в <strong>HTML5/Canvas</strong> с помощью <strong>Adobe Animate</strong>. Что бы вы лучше понимали что мы будем делать вот пример того что в итоге мы должны получить: 
-<div>
-		<button class="uiButton" onclick="buttonClick()">Нажми меня</button>
-		<canvas width="170" height="240" id="canvas"></canvas>
-</div>
-<script>
-	var jsPath = '{% asset_path egg.lib%}'
-	var atlasPath = '{% asset_path egg.png%}'
-	function buttonClick()
-	{
-		try {
-			eggObj.gotoAndPlay('die');
-		} catch (error) {
-			alert('Анимация еще не загружена');
-		}
-	}
-</script>
-<script defer src="https://code.createjs.com/createjs-2015.11.26.combined.js"></script>
-<script defer src="{% asset_path app.lib%}"></script>
-
-Собирается такая анимация на JavaScript из двух файлов:
-* {% asset_link egg.lib JS файл %} с описанием скелета анимации</li>
-* {% asset_link egg.png png %} скин для скелета</li>
-
-Это анимация была создана для использования во флеше, и нарисована была в редакторе Adobe Flash Professional(напомню что новое название редактора Adobe Animate). Как сделать такую конвертацию, читайте дальше...
+В прошлой статье мы разбирали как экспортировать из флеша простой контент: изображения, анимации в png-sequence, и т.п. Если же у вас есть скелетная анимация, с большим количеством кадров, экспортировать такую анимацию в png-sequence - это не решение проблемы. В этой ситуации мы можем конвертировать анимацию в <strong>HTML5/Canvas</strong> с помощью <strong>Adobe Animate</strong>. В это статье я расскажу как это сделать руками в редакторе, и какие сложности могут возникнуть при написании JSFL-скрипта.
 
 <!-- more -->
 
