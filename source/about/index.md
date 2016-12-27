@@ -11,10 +11,11 @@ date: 2016-12-17 21:51:56
  <div style="display: table-cell; vertical-align: middle; line-height: 18px">
    <div>
    Всем привет!
-
    Меня зовут Заур, это мой личный блог, в котором я буду рассказывать о личном опыте работы с новой, для меня, технологии создания браузерных игр, а именно <strong>JavaScript/Canvas/WebGL</strong>. 
    </div>
  </div>
 </div>
+
+* <a href="http://twitter.com/z_abdulgalimov">Twitter</a>
 
 
