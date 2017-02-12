@@ -1,6 +1,9 @@
 ---
 title: Создаем бота для телеграм на nodejs
-tags: 'nodejs, telegram, bots'
+tags:
+    - nodejs
+    - telegram
+    - bots
 category: nodejs
 date: 2017-01-23 11:26:11
 ---
