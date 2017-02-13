@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Cocos2d Shader Examples</title>
+    <link rel="icon" type="image/GIF" href="res/favicon.ico"/>
+
+    <meta name="viewport"
+        content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1,target-densitydpi=device-dpi"/>
+
+    <!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- force webkit on 360 -->
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <!-- force edge on IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <!-- force full screen on some browser -->
+    <meta name="full-screen" content="yes"/>
+    <meta name="x5-fullscreen" content="true"/>
+    <meta name="360-fullscreen" content="true"/>
+
+    <!-- force screen orientation on some browser -->
+    <!-- <meta name="screen-orientation" content="portrait"/>
+    <meta name="x5-orientation" content="portrait"> -->
+
+    <meta name="browsermode" content="application">
+    <meta name="x5-page-mode" content="app">
+
+<style type="text/css">
+canvas {
+  background-color: rgba(0, 0, 0, 0);
+}
+li {
+}
+li input {
+  width:100%;
+}
+</style>
+</head>
+<body>
+<div style="height: 100%; width: 300px; float:left;">
+  <canvas id="gameCanvas" width="300" height="380"></canvas>
+  <script>
+      (function () {
+          var nav = window.navigator;
+          var ua = nav.userAgent.toLowerCase();
+          var uaResult = /android (\d+(?:\.\d+)+)/i.exec(ua) || /android (\d+(?:\.\d+)+)/i.exec(nav.platform);
+          if (uaResult) {
+              var browserCheck = ua.match(/(qzone|micromessenger|qq)(mobile)?(browser)?\/?([\d.]+)/i);
+              if (browserCheck) {
+                  var browserVersion = parseFloat(browserCheck[4] || 0);
+                  if (browserVersion < 6.2) {
+                      var gameCanvas = document.getElementById("gameCanvas");
+                      var ctx = gameCanvas.getContext('2d');
+                      ctx.fillStyle = '#000000';
+                      ctx.fillRect(0, 0, 1, 1);
+                  }
+              }
+          }
+      })();
+  </script>
+
+  <script cocos src="game.min.js"></script>
+  <script cocos src="app.js"></script>
+</div>
+<div style="float:left; width:200px; padding:10px">
+  <script src="jscolor.min.js"></script>
+  <select id="selectOptions">
+    <option>Dropshadow</option>
+    <option>Outline</option>
+    <option>Glow</option>
+    <option>Grayscale</option>
+    <option>Blur</option>
+  </select>
+  <br><br>
+  <div id="dropshadowDiv" style="visibility: visible">
+    <li>
+      <span id="distance_label">distance</span>
+      <input id="distance" type="range"  min="0" max="40" />
+    </li>
+    <li>
+      <span id="radius_label">radius</span>
+      <input id="radius" type="range"  min="0" max="20" />
+    </li>
+    <li>
+      <span id="angle_label">angle</span>
+      <input id="angle" type="range"  min="0" max="360" />
+    </li>
+    <li>
+      <span id="threshold_label">threshold</span>
+      <input id="threshold" type="range"  min="1" max="30" />
+    </li>
+    <li>
+      <span id="alpha_label">alpha</span>
+      <input id="alpha" type="range"  min="0" max="100" />
+    </li>
+    <li>
+      <span id="color_label">color</span>
+      <input id="color" class="jscolor {onFineChange:'updateColor(this)'}" value="ff0000">
+    </li>
+  </div>
+</div>
+</body>
+</html>

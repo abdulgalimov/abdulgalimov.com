@@ -10,11 +10,12 @@ category: Cocos2d
 
 Всем привет. Будучи флешером, меня всегда волновала тема написания шейдеров, к сожалению на флеше не было возможности писать полноценные шейдеры, только AGAL-жалкое подобие. В webgl вы можете и должны писать шейдеры на языке [GLSL](https://ru.wikipedia.org/wiki/OpenGL_Shading_Language). В каждой библиотеке, будь то Cocos2d или PIXI, существуют свои небольшие правила и соглашения, которым надо следовать для написания шейдера. В этой статье я хочу показать несколько примеров того, как написать шейдер для фреймфорка Cocos2d-JS. Будут рассмотрены примеры реализации следующих фильтров:
 
-1. Grayscale
-2. Blur
-3. Outline
-4. Glow
-5. Dropshadow
+1. [Grayscale](/Cocos2d/Shader-Examples/#Grayscale)
+2. [Blur](/Cocos2d/Shader-Examples/#Blur)
+3. [Outline](/Cocos2d/Shader-Examples/#Outline)
+4. [Glow](/Cocos2d/Shader-Examples/#Glow)
+5. [Dropshadow](/Cocos2d/Shader-Examples/#Dropshadow)
+6. [Demo](/Cocos2d/Shader-Examples/#Demo)
 
 Чтобы легче было представить чем будем заниматься, вот превью фильтров:
 
@@ -24,6 +25,7 @@ category: Cocos2d
 
 <!-- more -->
 
+<a name="Grayscale"></a>
 # Grayscale
 
 ## Вершинный
@@ -82,6 +84,7 @@ var sprite = new cc.Sprite(res.image_png);
 sprite.shaderProgram = program;
 ```
 
+<a name="Blur"></a>
 # Blur
 
 Вершийнный шейдер такой же как и у эффекта **grayscale**.
@@ -149,7 +152,9 @@ sprite.shaderProgram = program;
 
 ```
 
-
+<a name="Outline"></a>
+<a name="Glow"></a>
+<a name="Dropshadow"></a>
 # Outline, Glow, Dropshadow
 
 Эффекты **Outline**, **Glow** и **Dropshadow** я реализовал в одном шейдере, который можно конфигурировать параметрами. Конечно прежде чем использовать это в реальном проекте, лучше подумать какие параметры вам не нужны и их можно исключить.
@@ -297,3 +302,14 @@ var shadowOptions = {
     angle:Math.PI/4
 };
 ```
+
+<a name="Demo"></a>
+# Demo
+<iframe width="100%" height="400" src="{% asset_path lib/index.html %}"></iframe>
+
+Ссылки:
+ - <a target="_blank" href="https://github.com/abdulgalimov/Cocos2d-Shader-Examples">Исходники cocos-проекта на GitHub</a>
+ - <a target="_blank" href="{% asset_path lib/app.zip %}">Исходники скомпилированного Demo</a>
+ - <a target="_blank" href="{% asset_path lib/index.html %}">Посмотреть Demo в новом окне</a>
+
+
