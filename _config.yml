@@ -70,7 +70,8 @@ theme: landscape
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type:
+  type: git
+  repo: https://abdulgalimov@bitbucket.org/abdulgalimov/abdulgalimov.com.git
 
 
 disqus_shortname: abdulgalimov-com

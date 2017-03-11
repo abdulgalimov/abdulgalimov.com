@@ -325,3 +325,4 @@ python -m pip install -U tinify
 # Ссылки
  - Собствено сам скрипт <a target="_blank" href="{% asset_path content/Content.py %}">Content.py</a>
  - Архив с примерами <a target="_blank" href="{% asset_path example.zip %}">example.zip</a>
+ - Скрипт + примеры на [Github](https://github.com/abdulgalimov/CreateAtlases)
