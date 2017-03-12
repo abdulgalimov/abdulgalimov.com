@@ -6,6 +6,7 @@ import os
 import glob
 import subprocess
 import tinify
+from PIL import Image
 
 
 def getArgs(name, isArray=False):
@@ -77,6 +78,84 @@ def copyImages(atlasConf):
         if not imageExclude:
             copyTo(image, ImagesDir + atlasConf['keyPath'] + '/' + image.split(WorkDir)[1])
 
+
+# fonts begin ********************************************************************************
+# pip3 install Pillow
+def extractFontChars(font):
+    fntImage = Image.open(font['path'] + '.png')
+    #
+    charsDir = ImagesDir+'_chars_/'+font['name']+'/'
+    if not os.path.exists(charsDir):
+        os.makedirs(charsDir)
+    #
+    FntFile = open(font['path'] + '.fnt', 'r')
+    FntContent = FntFile.readlines()
+    FntFile.close()
+    for fntLine in FntContent:
+        if not re.search('^char\s+', fntLine): continue
+        #
+        id = re.search('id=(\d+)', fntLine).group(1)
+        x = int(re.search('x=(\d+)', fntLine).group(1))
+        y = int(re.search('y=(\d+)', fntLine).group(1))
+        w = int(re.search('width=(\d+)', fntLine).group(1))
+        h = int(re.search('height=(\d+)', fntLine).group(1))
+        if w == 0 or h == 0: continue
+        box = (x, y, x+w, y+h)
+        crop = fntImage.crop(box)
+        crop.save(charsDir+id+'.png')
+
+def getShift(name, AtlasContent):
+    template = '<key>' + name + '\.png<\/key>[\w\W]+?<key>textureRect</key>\s+<string>\{\{(\d+),(\d+)'
+    matches = re.search(template, AtlasContent, re.MULTILINE)
+    if not matches: return None
+    shift = {}
+    shift['x'] = int(matches.group(1))
+    shift['y'] = int(matches.group(2))
+    return shift
+
+def shiftFont(atlasConf, AtlasContent, font, fullOutPath):
+    isDense = 'dense' in font and font['dense'] == True
+    shift = None
+    if not isDense:
+        shift = getShift(atlasConf['name'] + '/' + font['name'], AtlasContent)
+        print('shift', shift);
+    #
+    with open(font['path'] + '.fnt') as f:
+        FntContent = f.readlines()
+    f.close()
+    xyPattern = re.compile('(x|y)=(\d+)')
+    filePattern = re.compile('file="([^"]+)"')
+    tagetFile = open(TempDir + font['name'] + '.fnt', 'w')
+    #
+    for fntLine in FntContent:
+        result = xyPattern.findall(fntLine)
+        idSearch = re.search('id=(\d+)', fntLine)
+        id = '' if not idSearch else idSearch.group(1)
+        if isDense:
+            shift = getShift('_chars_/'+font['name']+'/'+id, AtlasContent)
+        for v in result:
+            key = v[0]
+            value = int(v[1])
+            # применяем смещение в x,y
+            if not isDense:
+                value = value + shift[key]
+            else:
+                value = 0 if not shift else shift[key]
+            fntLine = fntLine.replace(key + '=' + v[1], key + '=' + str(value))
+        result = filePattern.findall(fntLine)
+        if len(result) > 0:
+            # меням путь к файлу на атлас
+            fntLine = fntLine.replace('file="' + result[0] + '"', 'file="' + atlasConf['name'] + '.png"')
+        # записываем строку в новый файл
+        tagetFile.write(fntLine)
+    tagetFile.close()
+    #
+    fontOutName = font['name'] if 'out' not in font else font['out']
+    copyTo(TempDir + font['name'] + '.fnt', fullOutPath + fontOutName + '.fnt')
+
+
+# fonts end ********************************************************************************
+
 def runTP(atlasName, tpOptions):
     bashcmd = 'TexturePacker '
     for key in tpOptions:
@@ -110,7 +189,10 @@ def createAtlas(atlasConf):
     if 'fonts' in atlasConf:
         for font in atlasConf['fonts']:
             tpOptions['--disable-rotation'] = None
-            copyTo(font['path'] + '.png', ImagesDir+atlasConf['name'])
+            if 'dense' not in font or not font['dense']:
+                copyTo(font['path'] + '.png', ImagesDir+atlasConf['name'])
+            else:
+                extractFontChars(font)
     #
     #
     runTP(atlasConf['name'], tpOptions)
@@ -126,35 +208,7 @@ def createAtlas(atlasConf):
     #
     if 'fonts' in atlasConf:
         for font in atlasConf['fonts']:
-            template = '<key>'+atlasConf['name']+'/'+ font['name'] + '\.png<\/key>[\w\W]+?<key>textureRect</key>\s+<string>\{\{(\d+),(\d+)'
-            matches = re.search(template, AtlasContent, re.MULTILINE)
-            shift = {}
-            shift['x'] = int(matches.group(1))
-            shift['y'] = int(matches.group(2))
-            #
-            with open(font['path']+'.fnt') as f: FntContent = f.readlines()
-            f.close()
-            xyPattern = re.compile('(x|y)=(\d+)')
-            filePattern = re.compile('file="([^"]+)"')
-            tagetFile = open(TempDir + font['name'] + '.fnt', 'w')
-            #
-            for fntLine in FntContent:
-                result = xyPattern.findall(fntLine)
-                for v in result:
-                    key = v[0]
-                    value = int(v[1])
-                    # применяем смещение в x,y
-                    fntLine = fntLine.replace(key + '=' + v[1], key + '=' + str(value + shift[key]))
-                result = filePattern.findall(fntLine)
-                if len(result) > 0:
-                    # меням путь к файлу на атлас
-                    fntLine = fntLine.replace('file="' + result[0] + '"', 'file="'+atlasConf['name']+'.png"')
-                # записываем строку в новый файл
-                tagetFile.write(fntLine)
-            tagetFile.close()
-            #
-            fontOutName = font['name'] if 'out' not in font else font['out']
-            copyTo(TempDir + font['name'] + '.fnt', fullOutPath + fontOutName + '.fnt')
+            shiftFont(atlasConf, AtlasContent, font, fullOutPath)
     #
     copyTo(TempDir+atlasConf['name']+'.png', fullOutPath)
     copyTo(TempDir+atlasConf['name']+'.plist', fullOutPath)
